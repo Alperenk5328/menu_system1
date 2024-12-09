@@ -9,6 +9,6 @@ class MenuItem(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    table_number = db.Column(db.Integer, nullable=False)
-    details = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(50), nullable=False, default='Bekliyor')
+    table_number = db.Column(db.Integer, nullable=False)  # Masa numarası
+    details = db.Column(db.Text, nullable=False)  # Sipariş detayları (JSON formatında saklanır)
+    status = db.Column(db.String(50), nullable=False, default='Bekliyor')  # Sipariş durumu (Bekliyor, Tamamlandı)

@@ -73,4 +73,29 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    // Siparişi Onayla
+    document.getElementById("confirm-order").addEventListener("click", function () {
+        const tableNumber = prompt("Masa numarasını giriniz:");
+        if (tableNumber) {
+            fetch("/add_order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    table_number: tableNumber,
+                    details: JSON.stringify(cart)
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert("Sipariş başarıyla gönderildi!");
+                    window.location.reload();
+                } else {
+                    alert("Bir hata oluştu. Lütfen tekrar deneyiniz.");
+                }
+            });
+        }
+    });
 });
+

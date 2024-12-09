@@ -5,99 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sıcak İçecekler</title>
     <link rel="stylesheet" href="../static/styles.css">
+    <style>
+        /* Modal Stili */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .modal-content h3 {
+            margin: 0;
+        }
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
         <div class="logo">
-            <img src="../static/pictures/logo.webp" alt="pictures">
+            <img src="../static/pictures/logo.webp" alt="Logo">
         </div>
     </header>
 
     <main class="menu-list">
         <h1>Sıcak İçecekler</h1>
+        {% for item in menu_items %}
         <div class="menu-item">
             <div class="item">
-                <img src="../static/pictures/cay.jpg" class="item-img" alt="Kahve">
+                <img src="../static/pictures/{{ item.name | lower }}.webp" class="item-img" alt="{{ item.name }}">
                 <div class="item-info">
-                    <p class="item-name">Çay</p>
-                    <span class="item-price">₺20</span>
+                    <p class="item-name">{{ item.name }}</p>
+                    <span class="item-price">₺{{ item.price }}</span>
                     <div class="item-quantity">
-                        <button class="decrease">-</button>
+                        <button class="decrease" data-name="{{ item.name }}">-</button>
                         <input type="number" class="quantity" value="1" min="1">
-                        <button class="increase">+</button>
+                        <button class="increase" data-name="{{ item.name }}">+</button>
                     </div>
-                    <button class="add-to-cart" data-name="Çay" data-price="20">Ekle</button>
+                    <button class="add-to-cart" data-name="{{ item.name }}" data-price="{{ item.price }}">Ekle</button>
                 </div>
             </div>
         </div>
-
-        <div class="menu-item">
-            <div class="item">
-                <img src="../static/pictures/kahve.webp" class="item-img" alt="Kahve">
-                <div class="item-info">
-                    <p class="item-name">Kahve</p>
-                    <span class="item-price">₺30</span>
-                    <div class="item-quantity">
-                        <button class="decrease">-</button>
-                        <input type="number" class="quantity" value="1" min="1">
-                        <button class="increase">+</button>
-                    </div>
-                    <button class="add-to-cart" data-name="Kahve" data-price="30">Ekle</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="menu-item">
-            <div class="item">
-                <img src="../static/pictures/sıcçik.webp" class="item-img" alt="Kahve">
-                <div class="item-info">
-                    <p class="item-name">Sıcak Çikolata</p>
-                    <span class="item-price">₺35</span>
-                    <div class="item-quantity">
-                        <button class="decrease">-</button>
-                        <input type="number" class="quantity" value="1" min="1">
-                        <button class="increase">+</button>
-                    </div>
-                    <button class="add-to-cart" data-name="Sıcak Çikolata" data-price="35">Ekle</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="menu-item">
-            <div class="item">
-                <img src="../static/pictures/latte.webp" class="item-img" alt="Kahve">
-                <div class="item-info">
-                    <p class="item-name">Latte</p>
-                    <span class="item-price">₺40</span>
-                    <div class="item-quantity">
-                        <button class="decrease">-</button>
-                        <input type="number" class="quantity" value="1" min="1">
-                        <button class="increase">+</button>
-                    </div>
-                    <button class="add-to-cart" data-name="Latte" data-price="40">Ekle</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="menu-item">
-            <div class="item">
-                <img src="../static/pictures/espresso.webp" class="item-img" alt="Kahve">
-                <div class="item-info">
-                    <p class="item-name">Espresso</p>
-                    <span class="item-price">₺25</span>
-                    <div class="item-quantity">
-                        <button class="decrease">-</button>
-                        <input type="number" class="quantity" value="1" min="1">
-                        <button class="increase">+</button>
-                    </div>
-                    <button class="add-to-cart" data-name="Espresso" data-price="25">Ekle</button>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </main>
 
-    <!-- Sepet Satırı -->
-    <section class="cart" style="display: none;">
+    <section class="cart">
         <h2>Sepet</h2>
         <div class="cart-items"></div>
         <div class="cart-footer">
@@ -107,9 +81,119 @@
     </section>
 
     <footer class="footer">
-        <p> © Namesake Software. Tüm hakları saklıdır.</p>
+        <p>© Namesake Software. Tüm hakları saklıdır.</p>
     </footer>
 
-    <script src="../static/script.js"></script>
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3>Masa Numarası Girin</h3>
+            <input type="number" id="table-number" placeholder="Masa Numarası" min="1" required>
+            <br><br>
+            <button id="submit-order">Siparişi Gönder</button>
+        </div>
+    </div>
+
+    <!-- Başarı Mesajı -->
+    <div class="success-message" id="success-message">Sipariş gönderildi!</div>
+
+    <script>
+        const cart = [];
+        const cartElement = document.querySelector('.cart');
+        const cartItemsElement = document.querySelector('.cart-items');
+        const totalPriceElement = document.getElementById('total-price');
+        const modal = document.getElementById('modal');
+        const tableNumberInput = document.getElementById('table-number');
+        const submitOrderButton = document.getElementById('submit-order');
+        const successMessage = document.getElementById('success-message');
+
+        document.body.addEventListener('click', (event) => {
+            if (event.target.classList.contains('increase')) {
+                const quantityInput = event.target.parentElement.querySelector('.quantity');
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+            }
+
+            if (event.target.classList.contains('decrease')) {
+                const quantityInput = event.target.parentElement.querySelector('.quantity');
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) quantityInput.value = currentValue - 1;
+            }
+
+            if (event.target.classList.contains('add-to-cart')) {
+                const name = event.target.getAttribute('data-name');
+                const price = parseFloat(event.target.getAttribute('data-price'));
+                const quantity = parseInt(event.target.parentElement.querySelector('.quantity').value);
+
+                const existingItem = cart.find(item => item.name === name);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({ name, price, quantity });
+                }
+
+                cartElement.style.display = 'block';
+                updateCart();
+            }
+
+            if (event.target.id === 'confirm-order') {
+                if (cart.length === 0) {
+                    alert('Sepet boş!');
+                    return;
+                }
+                modal.style.display = 'flex';
+            }
+        });
+
+        function updateCart() {
+            cartItemsElement.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>₺${itemTotal.toFixed(2)}</span>
+                    <button class="remove-from-cart" data-index="${index}">Sil</button>
+                `;
+                cartItemsElement.appendChild(cartItem);
+            });
+
+            totalPriceElement.textContent = `₺${total.toFixed(2)}`;
+        }
+
+        submitOrderButton.addEventListener('click', () => {
+            const tableNumber = tableNumberInput.value;
+            if (!tableNumber) {
+                alert('Lütfen masa numarasını girin!');
+                return;
+            }
+
+            fetch('/submit_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    table_number: tableNumber,
+                    details: JSON.stringify(cart)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    successMessage.style.display = 'block';
+                    setTimeout(() => successMessage.style.display = 'none', 3000);
+                    cart.length = 0;
+                    updateCart();
+                    modal.style.display = 'none';
+                    cartElement.style.display = 'none';
+                } else {
+                    alert('Sipariş gönderilirken bir hata oluştu.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
