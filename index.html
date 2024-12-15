@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MENÜ</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="../static/pictures/logo.webp" alt="pictures">
+        </div>
+    </header>
+    <main class="menu-grid">
+        <div class="menu-item">
+            <a href="{{ url_for('soguk_icecekler') }}">
+                <div class="overlay">Soğuk İçecekler</div>
+                <img src="{{ url_for('static', filename='pictures/soguk.jpeg') }}" alt="Soğuk İçecekler">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('sicak_icecekler') }}">
+                <div class="overlay">Sıcak İçecekler</div>
+                <img src="{{ url_for('static', filename='pictures/sıcak.jpg') }}" alt="Sıcak İçecekler">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('tatlilar') }}">
+                <div class="overlay">Tatlılar</div>
+                <img src="{{ url_for('static', filename='pictures/tatli.jpg') }}" alt="Tatlılar">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="kokteyller.html">
+                <div class="overlay">Kokteyller</div>
+                <img src="../static/pictures/kokteyller.jpg" alt="pictures">
+            </a>
+        </div>
+        <!-- Yeni Kategoriler -->
+        <div class="menu-item">
+            <a href="kahvalti.html">
+                <div class="overlay">Kahvaltı</div>
+                <img src="../static/pictures/kahvaltı.webp" alt="pictures">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="tost-cesitleri.html">
+                <div class="overlay">Tost Çeşitleri</div>
+                <img src="../static/pictures/tost.webp" alt="pictures">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="pizza.html">
+                <div class="overlay">Pizza</div>
+                <img src="../static/pictures/pizza.webp" alt="pictures">
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="burgerler.html">
+                <div class="overlay">Burgerler</div>
+                <img src="../static/pictures/burger.jpg" alt="pictures">
+            </a>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>© Namesake Software. Tüm hakları saklıdır.</p>
+        <div class="social-media">
+            <a href="#">Facebook</a> | 
+            <a href="#">Instagram</a> | 
+            <a href="#">Twitter</a>
+        </div>
+    </footer>
+</body>
+</html>
