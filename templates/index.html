@@ -1,75 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MENÜ</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <title>MC Stone Coffee</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .menu-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .menu-card:hover {
+            transform: translateY(-5px);
+        }
+        .menu-image {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <img src="../static/pictures/logo.webp" alt="pictures">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">MC Stone Coffee</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="cartBtn">
+                            Sepet <span class="badge bg-primary" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link">Masa: <span id="tableNumber" class="text-white"></span></span>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </header>
-    <main class="menu-grid">
-        <div class="menu-item">
-            <a href="{{ url_for('soguk_icecekler') }}">
-                <div class="overlay">Soğuk İçecekler</div>
-                <img src="{{ url_for('static', filename='pictures/soguk.jpeg') }}" alt="Soğuk İçecekler">
-            </a>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Menümüz</h1>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card menu-card h-100" onclick="window.location.href='/sicak-icecekler'">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" class="card-img-top menu-image" alt="Sıcak İçecekler">
+                    <div class="card-body">
+                        <h5 class="card-title">Sıcak İçecekler</h5>
+                        <p class="card-text">Birbirinden lezzetli sıcak içeceklerimiz</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card menu-card h-100" onclick="window.location.href='/soguk-icecekler'">
+                    <img src="https://images.unsplash.com/photo-1543661975-42d2b5d61924" class="card-img-top menu-image" alt="Soğuk İçecekler">
+                    <div class="card-body">
+                        <h5 class="card-title">Soğuk İçecekler</h5>
+                        <p class="card-text">Serinleten soğuk içecek çeşitlerimiz</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card menu-card h-100" onclick="window.location.href='/tatlilar'">
+                    <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b" class="card-img-top menu-image" alt="Tatlılar">
+                    <div class="card-body">
+                        <h5 class="card-title">Tatlılar</h5>
+                        <p class="card-text">Enfes tatlı çeşitlerimiz</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="menu-item">
-            <a href="{{ url_for('sicak_icecekler') }}">
-                <div class="overlay">Sıcak İçecekler</div>
-                <img src="{{ url_for('static', filename='pictures/sıcak.jpg') }}" alt="Sıcak İçecekler">
-            </a>
+    </div>
+
+    <!-- Sepet Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sepetiniz</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="cartItems">
+                        <!-- Sepet öğeleri buraya gelecek -->
+                    </div>
+                    <div class="modal-footer">
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h5>Toplam:</h5>
+                                <h5 id="cartTotal">₺0.00</h5>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="submitOrder()">Siparişi Onayla</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="menu-item">
-            <a href="{{ url_for('tatlilar') }}">
-                <div class="overlay">Tatlılar</div>
-                <img src="{{ url_for('static', filename='pictures/tatli.jpg') }}" alt="Tatlılar">
-            </a>
+    </div>
+
+    <!-- Toast Bildirimleri -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="orderToast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Bildirim</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
         </div>
-        <div class="menu-item">
-            <a href="kokteyller.html">
-                <div class="overlay">Kokteyller</div>
-                <img src="../static/pictures/kokteyller.jpg" alt="pictures">
-            </a>
-        </div>
-        <!-- Yeni Kategoriler -->
-        <div class="menu-item">
-            <a href="kahvalti.html">
-                <div class="overlay">Kahvaltı</div>
-                <img src="../static/pictures/kahvaltı.webp" alt="pictures">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="tost-cesitleri.html">
-                <div class="overlay">Tost Çeşitleri</div>
-                <img src="../static/pictures/tost.webp" alt="pictures">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="pizza.html">
-                <div class="overlay">Pizza</div>
-                <img src="../static/pictures/pizza.webp" alt="pictures">
-            </a>
-        </div>
-        <div class="menu-item">
-            <a href="burgerler.html">
-                <div class="overlay">Burgerler</div>
-                <img src="../static/pictures/burger.jpg" alt="pictures">
-            </a>
-        </div>
-    </main>
-    <footer class="footer">
-        <p>© Namesake Software. Tüm hakları saklıdır.</p>
-        <div class="social-media">
-            <a href="#">Facebook</a> | 
-            <a href="#">Instagram</a> | 
-            <a href="#">Twitter</a>
-        </div>
-    </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        // Masa numarasını URL'den al
+        const urlParams = new URLSearchParams(window.location.search);
+        const tableNumber = urlParams.get('table');
+        document.getElementById('tableNumber').textContent = tableNumber;
+
+        // Sepet işlemleri
+        let cart = [];
+        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+        const orderToast = new bootstrap.Toast(document.getElementById('orderToast'));
+
+        // WebSocket bağlantısı
+        const socket = io();
+
+        socket.on('order_status_update', function(data) {
+            if (data.table_number == tableNumber) {
+                document.getElementById('toastMessage').textContent = 
+                    `Siparişiniz ${data.status === 'Tamamlandı' ? 'hazır!' : 'iptal edildi.'}`;
+                orderToast.show();
+            }
+        });
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            let total = 0;
+            
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                cartItems.innerHTML += `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <h6 class="mb-0">${item.name}</h6>
+                            <small class="text-muted">₺${item.price.toFixed(2)} x ${item.quantity}</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="btn btn-sm btn-outline-primary ms-2" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
+                            <button class="btn btn-sm btn-outline-danger ms-3" onclick="removeFromCart(${index})">
+                                <i class="bi bi-trash"></i> Sil
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cartTotal').textContent = `₺${total.toFixed(2)}`;
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Sepet verilerini localStorage'a kaydet
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function addToCart(item) {
+            const existingItem = cart.find(i => i.name === item.name);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({...item, quantity: 1});
+            }
+            updateCart();
+            
+            document.getElementById('toastMessage').textContent = `${item.name} sepete eklendi!`;
+            orderToast.show();
+        }
+
+        function updateQuantity(index, newQuantity) {
+            if (newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+            } else {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function submitOrder() {
+            if (cart.length === 0) {
+                document.getElementById('toastMessage').textContent = 'Sepetiniz boş!';
+                orderToast.show();
+                return;
+            }
+
+            fetch('/submit_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    table_number: tableNumber,
+                    items: cart
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cart = [];
+                    updateCart();
+                    cartModal.hide();
+                    document.getElementById('toastMessage').textContent = 'Siparişiniz alındı!';
+                    orderToast.show();
+                } else {
+                    throw new Error(data.error);
+                }
+            })
+            .catch(error => {
+                document.getElementById('toastMessage').textContent = 'Sipariş gönderilirken hata oluştu!';
+                orderToast.show();
+                console.error('Error:', error);
+            });
+        }
+
+        // Sayfa yüklendiğinde sepeti localStorage'dan yükle
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCart();
+            }
+
+            // Sepet butonuna tıklandığında modalı göster
+            document.getElementById('cartBtn').addEventListener('click', () => cartModal.show());
+        });
+
+        // Masa numarası yoksa ana sayfaya yönlendir
+        if (!tableNumber) {
+            window.location.href = '/';
+        }
+    </script>
 </body>
 </html>
